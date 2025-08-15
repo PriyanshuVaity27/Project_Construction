@@ -778,7 +778,7 @@ const ContactsManager: React.FC = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="w-full mb-4">
+                    <div className="sm:col-span-2">
                       <label htmlFor="locationCovered" className="block text-sm font-medium text-gray-700 mb-2">
                         Location Covered
                       </label>

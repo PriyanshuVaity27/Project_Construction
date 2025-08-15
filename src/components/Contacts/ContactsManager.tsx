@@ -56,7 +56,7 @@ const sectionConfig: Record<ContactType, { showBasicInfo: boolean; showContactIn
     showContactInfo: true,
     showLocationDetails: true,
   },
-  'Land Acquisition': {
+  'Broker': {
     showBasicInfo: true,
     showContactInfo: true,
     showLocationDetails: true,
@@ -95,6 +95,9 @@ const ContactsManager: React.FC = () => {
     linkedinLink: '',
     city: '',
     location: '',
+    brokerName: '',
+    locationCovered: '',
+    remark: '',
   });
   const [formError, setFormError] = useState<string>('');
 
@@ -234,6 +237,9 @@ const ContactsManager: React.FC = () => {
       linkedinLink: contact.linkedinLink || '',
       city: contact.city || '',
       location: contact.location || '',
+      brokerName: contact.brokerName || '',
+      locationCovered: contact.locationCovered || '',
+      remark: contact.remark || '',
     });
     setShowModal(true);
   }, []);
@@ -278,6 +284,9 @@ const ContactsManager: React.FC = () => {
       linkedinLink: '',
       city: '',
       location: '',
+      brokerName: '',
+      locationCovered: '',
+      remark: '',
     });
     setEditingContact(null);
     setFormError('');
@@ -338,8 +347,8 @@ const ContactsManager: React.FC = () => {
       case 'Client': return <Building2 className="w-4 h-4" />;
       case 'Developer': return <Users className="w-4 h-4" />;
       case 'Individual Owner': return <User className="w-4 h-4" />;
-      case 'Land Acquisition': return <FileText className="w-4 h-4" />;
-      case 'Others': return <UserCheck className="w-4 h-4" />;
+      case 'Broker': return <UserCheck className="w-4 h-4" />;
+      case 'Others': return <FileText className="w-4 h-4" />;
       default: return <User className="w-4 h-4" />;
     }
   };
@@ -380,10 +389,12 @@ const ContactsManager: React.FC = () => {
           { key: 'departmentDesignation', label: 'Department / Designation', sortable: true },
           ...baseColumns,
         ];
-      case 'Land Acquisition':
+      case 'Broker':
         return [
-          { key: 'developerName', label: 'Developer Name', sortable: true },
+          { key: 'brokerName', label: 'Broker Name', sortable: true },
           { key: 'contactType', label: 'Type', sortable: true },
+          { key: 'locationCovered', label: 'Location Covered', sortable: true },
+          { key: 'remark', label: 'Remark', sortable: true },
           ...baseColumns,
         ];
       default:
@@ -460,7 +471,7 @@ const ContactsManager: React.FC = () => {
 
       <div className="border-b border-gray-200 overflow-x-auto">
         <nav className="flex space-x-8 min-w-max">
-          {(['Client', 'Developer', 'Individual Owner', 'Land Acquisition', 'Others'] as ContactType[]).map((tab) => (
+          {(['Client', 'Developer', 'Individual Owner', 'Broker', 'Others'] as ContactType[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -720,17 +731,17 @@ const ContactsManager: React.FC = () => {
                     </div>
                   </>
                 )}
-                {activeTab === 'Land Acquisition' && (
+                {activeTab === 'Broker' && (
                   <>
                     <div>
-                      <label htmlFor="developerName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Developer Name *
+                      <label htmlFor="brokerName" className="block text-sm font-medium text-gray-700 mb-2">
+                        Broker Name *
                       </label>
                       <input
-                        id="developerName"
+                        id="brokerName"
                         type="text"
-                        value={formData.developerName || ''}
-                        onChange={(e) => setFormData({ ...formData, developerName: e.target.value })}
+                        value={formData.brokerName || ''}
+                        onChange={(e) => setFormData({ ...formData, brokerName: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                         required
                       />
@@ -739,12 +750,44 @@ const ContactsManager: React.FC = () => {
                       <label htmlFor="contactType" className="block text-sm font-medium text-gray-700 mb-2">
                         Type
                       </label>
-                      <input
+                      <select
                         id="contactType"
-                        type="text"
-                        value={formData.contactType || ''}
-                        onChange={(e) => setFormData({ ...formData, contactType: e.target.value })}
+                        multiple
+                        value={(formData.contactType || '').split(', ')}
+                        onChange={(e) => {
+                          const selected = Array.from(e.target.selectedOptions).map(option => option.value);
+                          setFormData({ ...formData, contactType: selected.join(', ') });
+                        }}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="Corporate Office">Corporate Office</option>
+                        <option value="Retail">Retail</option>
+                        <option value="Warehouse">Warehouse</option>
+                        <option value="Land">Land</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="locationCovered" className="block text-sm font-medium text-gray-700 mb-2">
+                        Location Covered
+                      </label>
+                      <input
+                        id="locationCovered"
+                        type="text"
+                        value={formData.locationCovered || ''}
+                        onChange={(e) => setFormData({ ...formData, locationCovered: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="remark" className="block text-sm font-medium text-gray-700 mb-2">
+                        Remark
+                      </label>
+                      <textarea
+                        id="remark"
+                        value={formData.remark || ''}
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
                       />
                     </div>
                   </>

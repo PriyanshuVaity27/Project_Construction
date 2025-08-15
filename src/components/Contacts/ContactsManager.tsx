@@ -68,6 +68,8 @@ const sectionConfig: Record<ContactType, { showBasicInfo: boolean; showContactIn
   },
 };
 
+const brokerTypes = ['Corporate Office', 'Retail', 'Warehouse', 'Land'];
+
 const ContactsManager: React.FC = () => {
   const { user } = useAuth();
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -747,24 +749,34 @@ const ContactsManager: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="contactType" className="block text-sm font-medium text-gray-700 mb-2">
-                        Type
-                      </label>
-                      <select
-                        id="contactType"
-                        multiple
-                        value={(formData.contactType || '').split(', ')}
-                        onChange={(e) => {
-                          const selected = Array.from(e.target.selectedOptions).map(option => option.value);
-                          setFormData({ ...formData, contactType: selected.join(', ') });
-                        }}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      >
-                        <option value="Corporate Office">Corporate Office</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Warehouse">Warehouse</option>
-                        <option value="Land">Land</option>
-                      </select>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                      <div className="space-y-2">
+                        {brokerTypes.map((type) => (
+                          <div key={type} className="flex items-center">
+                            <input
+                              id={`broker-type-${type.toLowerCase().replace(' ', '-')}`}
+                              type="checkbox"
+                              checked={(formData.contactType || '').split(', ').filter(Boolean).includes(type)}
+                              onChange={(e) => {
+                                const selected = (formData.contactType || '').split(', ').filter(Boolean);
+                                if (e.target.checked) {
+                                  selected.push(type);
+                                } else {
+                                  const index = selected.indexOf(type);
+                                  if (index > -1) {
+                                    selected.splice(index, 1);
+                                  }
+                                }
+                                setFormData({ ...formData, contactType: selected.join(', ') });
+                              }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label htmlFor={`broker-type-${type.toLowerCase().replace(' ', '-')}`} className="ml-2 text-sm text-gray-700">
+                              {type}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div>
                       <label htmlFor="locationCovered" className="block text-sm font-medium text-gray-700 mb-2">

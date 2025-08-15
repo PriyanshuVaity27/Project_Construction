@@ -51,22 +51,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="bg-gray-900 text-white w-64 min-h-screen flex flex-col">
-  <div className="p-6 border-b border-gray-700">
-    <div className="flex flex-col items-center space-y-3">
-      <div className="bg-blue-600 p-3 rounded-lg">
-        <img 
-          src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" // Replace with actual logo path
-          alt="ConstructCRM Logo" 
-          className="h-12 w-12 object-cover" // Increased size from h-6 w-6 to h-12 w-12
-        />
+      <div className="p-6 border-b border-gray-700">
+        <div className="flex flex-col items-center space-y-3">
+          <div className="p-4 rounded-lg">
+            <img 
+              src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" 
+              alt="ConstructCRM Logo" 
+              className="h-16 w-16 object-cover"
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-xl font-bold">Green Earth Spaces</h1>
+            <p className="text-sm text-gray-400">Project Management</p>
+          </div>
+        </div>
       </div>
-      <div className="text-center">
-        <h1 className="text-xl font-bold">Green Earth Spaces</h1>
-        <p className="text-sm text-gray-400">Project Management</p>
-      
-      </div>
-    </div>
-  </div>
 
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
@@ -79,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
                       ? 'bg-blue-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                      : 'text-gray-300 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
                   <IconComponent className="h-5 w-5" />
@@ -103,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           <span>Logout</span>

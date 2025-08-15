@@ -50,19 +50,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = user?.role === 'admin' ? adminMenuItems : employeeMenuItems;
 
   return (
-    <div className="bg-gray-900 text-white w-64 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-700">
+    <div className="bg-white text-gray-900 w-64 min-h-screen flex flex-col">
+      <div className="p-6 border-b border-gray-200">
         <div className="flex flex-col items-center space-y-3">
           <div className="p-4 rounded-lg">
             <img 
               src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" 
               alt="ConstructCRM Logo" 
-              className="h-30 w-30 "
+              className="h-32 w-32"
             />
           </div>
           <div className="text-center">
             <h1 className="text-xl font-bold">Green Earth Spaces</h1>
-            <p className="text-sm text-gray-400">Project Management</p>
+            <p className="text-sm text-gray-500">Project Management</p>
           </div>
         </div>
       </div>
@@ -77,8 +77,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
-                      ? 'bg-gray-300 text-white'
-                      : 'text-gray-300 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`}
                 >
                   <IconComponent className="h-5 w-5" />
@@ -90,19 +90,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-gray-200">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="bg-gray-600 p-2 rounded-full">
+          <div className="bg-gray-200 p-2 rounded-full">
             <Users className="h-4 w-4" />
           </div>
           <div>
             <p className="text-sm font-medium">{user?.name}</p>
-            <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
+          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           <span>Logout</span>

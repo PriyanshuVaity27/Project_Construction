@@ -100,6 +100,7 @@ const ContactsManager: React.FC = () => {
     brokerName: '',
     locationCovered: '',
     remark: '',
+    requirements: '',
   });
   const [formError, setFormError] = useState<string>('');
 
@@ -242,6 +243,7 @@ const ContactsManager: React.FC = () => {
       brokerName: contact.brokerName || '',
       locationCovered: contact.locationCovered || '',
       remark: contact.remark || '',
+      requirements: contact.requirements || '',
     });
     setShowModal(true);
   }, []);
@@ -289,6 +291,7 @@ const ContactsManager: React.FC = () => {
       brokerName: '',
       locationCovered: '',
       remark: '',
+      requirements: '',
     });
     setEditingContact(null);
     setFormError('');
@@ -630,6 +633,38 @@ const ContactsManager: React.FC = () => {
             </div>
           )}
 
+          {activeTab === 'Broker' && sectionConfig[activeTab].showLocationDetails && (
+            <div className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200">
+              <h3 className="text-lg font-semibold text-purple-900 mb-4">Location Details</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                    City
+                  </label>
+                  <input
+                    id="city"
+                    type="text"
+                    value={formData.city || ''}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value.trim() })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <input
+                    id="location"
+                    type="text"
+                    value={formData.location || ''}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value.trim() })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {sectionConfig[activeTab].showBasicInfo && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
               <h3 className="text-lg font-semibold text-blue-900 mb-4">Basic Information</h3>
@@ -821,7 +856,7 @@ const ContactsManager: React.FC = () => {
                     </div>
                     <div>
                       <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
-                        Type
+                        Industry
                       </label>
                       <input
                         id="industry"
@@ -831,13 +866,37 @@ const ContactsManager: React.FC = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       />
                     </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-2">
+                        Requirements
+                      </label>
+                      <textarea
+                        id="requirements"
+                        value={formData.requirements || ''}
+                        onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="remark" className="block text-sm font-medium text-gray-700 mb-2">
+                        Remark
+                      </label>
+                      <textarea
+                        id="remark"
+                        value={formData.remark || ''}
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
+                      />
+                    </div>
                   </>
                 )}
               </div>
             </div>
           )}
 
-          {sectionConfig[activeTab].showLocationDetails && (
+          {activeTab !== 'Broker' && sectionConfig[activeTab].showLocationDetails && (
             <div className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200">
               <h3 className="text-lg font-semibold text-purple-900 mb-4">Location Details</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

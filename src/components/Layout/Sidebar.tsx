@@ -55,15 +55,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
     <div className="flex flex-col items-center space-y-3">
       <div className="bg-blue-600 p-3 rounded-lg">
         <img 
-          src="/path/to/your/image.png" // Replace with actual logo path
+          src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" // Replace with actual logo path
           alt="ConstructCRM Logo" 
           className="h-12 w-12 object-cover" // Increased size from h-6 w-6 to h-12 w-12
         />
       </div>
       <div className="text-center">
-        <h1 className="text-xl font-bold">ConstructCRM</h1>
+        <h1 className="text-xl font-bold">Green Earth Spaces</h1>
         <p className="text-sm text-gray-400">Project Management</p>
-        <p className="text-sm text-green-400 font-semibold">Green Earth Spaces</p> {/* New line */}
+      
       </div>
     </div>
   </div>

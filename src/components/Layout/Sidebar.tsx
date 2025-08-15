@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
             <img 
               src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" 
               alt="ConstructCRM Logo" 
-              className="h-16 w-16 object-cover"
+              className="h-30 w-30 "
             />
           </div>
           <div className="text-center">
@@ -77,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-gray-300 text-white'
                       : 'text-gray-300 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >

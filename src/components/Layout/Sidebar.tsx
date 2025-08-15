@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         <div className="flex flex-col items-center space-y-3">
           <div className="p-4 rounded-lg">
             <img 
-              src="https://media.licdn.com/dms/image/v2/C4E0BAQEovO2S-jJ4xg/company-logo_200_200/company-logo_200_200/0/1635411681058/green_earth_galleria_logo?e=2147483647&v=beta&t=j-JzaarPARe6PSuYO5hHR-qSqJ_1Zp4PoPD7Qp7OFVg" 
+              src="https://greenearthspaces.com/wp-content/uploads/2021/07/Final-Logo.png" 
               alt="ConstructCRM Logo" 
               className="h-32 w-32"
             />

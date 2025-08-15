@@ -50,8 +50,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = user?.role === 'admin' ? adminMenuItems : employeeMenuItems;
 
   return (
-    <div className="bg-white text-gray-900 w-64 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-200">
+    <div className="bg-blue-50 text-gray-900 w-64 min-h-screen flex flex-col">
+      <div className="p-6 border-b border-blue-100">
         <div className="flex flex-col items-center space-y-3">
           <div className="p-4 rounded-lg">
             <img 
@@ -77,8 +77,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
-                      ? 'bg-gray-200 text-gray-900'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-blue-200 text-gray-900'
+                      : 'text-gray-700 hover:bg-blue-100 hover:text-gray-900'
                   }`}
                 >
                   <IconComponent className="h-5 w-5" />
@@ -90,9 +90,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-blue-100">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="bg-gray-200 p-2 rounded-full">
+          <div className="bg-blue-100 p-2 rounded-full">
             <Users className="h-4 w-4" />
           </div>
           <div>
@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-gray-900 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           <span>Logout</span>
@@ -112,4 +112,4 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

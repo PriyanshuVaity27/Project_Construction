@@ -827,14 +827,14 @@ const InventoryManager: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {activeTab === 'warehouse' ? 'Cost Per Seat' : 'Rent Per Sqft'}
+                  {activeTab === 'coworking_space' ? 'Cost Per Seat' : 'Rent Per Sqft'}
                 </label>
                 <input
                   type="number"
-                  value={activeTab === 'warehouse' ? formData.costPerSeat : formData.rentPerSqft}
+                  value={activeTab === 'coworking_space' ? formData.costPerSeat : formData.rentPerSqft}
                   onChange={(e) => setFormData({ 
                     ...formData, 
-                    ...(activeTab === 'warehouse' 
+                    ...(activeTab === 'coworking_space' 
                       ? { costPerSeat: e.target.value } 
                       : { rentPerSqft: e.target.value })
                   })}
@@ -842,7 +842,7 @@ const InventoryManager: React.FC = () => {
                 />
               </div>
               
-              {activeTab !== 'warehouse' && (
+              {activeTab !== 'coworking_space' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     CAM Per Sqft
@@ -856,7 +856,7 @@ const InventoryManager: React.FC = () => {
                 </div>
               )}
 
-              {activeTab === 'warehouse' && (
+              {activeTab === 'coworking_space' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Setup Fees

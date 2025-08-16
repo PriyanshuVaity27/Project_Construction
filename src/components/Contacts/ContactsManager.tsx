@@ -56,7 +56,7 @@ const sectionConfig: Record<ContactType, { showBasicInfo: boolean; showContactIn
     showContactInfo: true,
     showLocationDetails: true,
   },
-  'Land Acquisition': {
+  'Broker': {
     showBasicInfo: true,
     showContactInfo: true,
     showLocationDetails: true,
@@ -67,6 +67,8 @@ const sectionConfig: Record<ContactType, { showBasicInfo: boolean; showContactIn
     showLocationDetails: true,
   },
 };
+
+const brokerTypes = ['Corporate Office', 'Retail', 'Warehouse', 'Land'];
 
 const ContactsManager: React.FC = () => {
   const { user } = useAuth();
@@ -95,6 +97,10 @@ const ContactsManager: React.FC = () => {
     linkedinLink: '',
     city: '',
     location: '',
+    brokerName: '',
+    locationCovered: '',
+    remark: '',
+    requirements: '',
   });
   const [formError, setFormError] = useState<string>('');
 
@@ -234,6 +240,10 @@ const ContactsManager: React.FC = () => {
       linkedinLink: contact.linkedinLink || '',
       city: contact.city || '',
       location: contact.location || '',
+      brokerName: contact.brokerName || '',
+      locationCovered: contact.locationCovered || '',
+      remark: contact.remark || '',
+      requirements: contact.requirements || '',
     });
     setShowModal(true);
   }, []);
@@ -278,6 +288,10 @@ const ContactsManager: React.FC = () => {
       linkedinLink: '',
       city: '',
       location: '',
+      brokerName: '',
+      locationCovered: '',
+      remark: '',
+      requirements: '',
     });
     setEditingContact(null);
     setFormError('');
@@ -338,8 +352,8 @@ const ContactsManager: React.FC = () => {
       case 'Client': return <Building2 className="w-4 h-4" />;
       case 'Developer': return <Users className="w-4 h-4" />;
       case 'Individual Owner': return <User className="w-4 h-4" />;
-      case 'Land Acquisition': return <FileText className="w-4 h-4" />;
-      case 'Others': return <UserCheck className="w-4 h-4" />;
+      case 'Broker': return <UserCheck className="w-4 h-4" />;
+      case 'Others': return <FileText className="w-4 h-4" />;
       default: return <User className="w-4 h-4" />;
     }
   };
@@ -380,10 +394,12 @@ const ContactsManager: React.FC = () => {
           { key: 'departmentDesignation', label: 'Department / Designation', sortable: true },
           ...baseColumns,
         ];
-      case 'Land Acquisition':
+      case 'Broker':
         return [
-          { key: 'developerName', label: 'Developer Name', sortable: true },
+          { key: 'brokerName', label: 'Broker Name', sortable: true },
           { key: 'contactType', label: 'Type', sortable: true },
+          { key: 'locationCovered', label: 'Location Covered', sortable: true },
+          { key: 'remark', label: 'Remark', sortable: true },
           ...baseColumns,
         ];
       default:
@@ -460,7 +476,7 @@ const ContactsManager: React.FC = () => {
 
       <div className="border-b border-gray-200 overflow-x-auto">
         <nav className="flex space-x-8 min-w-max">
-          {(['Client', 'Developer', 'Individual Owner', 'Land Acquisition', 'Others'] as ContactType[]).map((tab) => (
+          {(['Client', 'Developer', 'Individual Owner', 'Broker', 'Others'] as ContactType[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -617,6 +633,38 @@ const ContactsManager: React.FC = () => {
             </div>
           )}
 
+          {activeTab === 'Broker' && sectionConfig[activeTab].showLocationDetails && (
+            <div className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200">
+              <h3 className="text-lg font-semibold text-purple-900 mb-4">Location Details</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                    City
+                  </label>
+                  <input
+                    id="city"
+                    type="text"
+                    value={formData.city || ''}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value.trim() })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <input
+                    id="location"
+                    type="text"
+                    value={formData.location || ''}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value.trim() })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {sectionConfig[activeTab].showBasicInfo && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
               <h3 className="text-lg font-semibold text-blue-900 mb-4">Basic Information</h3>
@@ -720,31 +768,73 @@ const ContactsManager: React.FC = () => {
                     </div>
                   </>
                 )}
-                {activeTab === 'Land Acquisition' && (
+                {activeTab === 'Broker' && (
                   <>
                     <div>
-                      <label htmlFor="developerName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Developer Name *
+                      <label htmlFor="brokerName" className="block text-sm font-medium text-gray-700 mb-2">
+                        Broker Name *
                       </label>
                       <input
-                        id="developerName"
+                        id="brokerName"
                         type="text"
-                        value={formData.developerName || ''}
-                        onChange={(e) => setFormData({ ...formData, developerName: e.target.value })}
+                        value={formData.brokerName || ''}
+                        onChange={(e) => setFormData({ ...formData, brokerName: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                         required
                       />
                     </div>
                     <div>
-                      <label htmlFor="contactType" className="block text-sm font-medium text-gray-700 mb-2">
-                        Type
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                      <div className="space-y-2">
+                        {brokerTypes.map((type) => (
+                          <div key={type} className="flex items-center">
+                            <input
+                              id={`broker-type-${type.toLowerCase().replace(' ', '-')}`}
+                              type="checkbox"
+                              checked={(formData.contactType || '').split(', ').filter(Boolean).includes(type)}
+                              onChange={(e) => {
+                                const selected = (formData.contactType || '').split(', ').filter(Boolean);
+                                if (e.target.checked) {
+                                  selected.push(type);
+                                } else {
+                                  const index = selected.indexOf(type);
+                                  if (index > -1) {
+                                    selected.splice(index, 1);
+                                  }
+                                }
+                                setFormData({ ...formData, contactType: selected.join(', ') });
+                              }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label htmlFor={`broker-type-${type.toLowerCase().replace(' ', '-')}`} className="ml-2 text-sm text-gray-700">
+                              {type}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="locationCovered" className="block text-sm font-medium text-gray-700 mb-2">
+                        Location Covered
                       </label>
                       <input
-                        id="contactType"
+                        id="locationCovered"
                         type="text"
-                        value={formData.contactType || ''}
-                        onChange={(e) => setFormData({ ...formData, contactType: e.target.value })}
+                        value={formData.locationCovered || ''}
+                        onChange={(e) => setFormData({ ...formData, locationCovered: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="remark" className="block text-sm font-medium text-gray-700 mb-2">
+                        Remark
+                      </label>
+                      <textarea
+                        id="remark"
+                        value={formData.remark || ''}
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
                       />
                     </div>
                   </>
@@ -766,7 +856,7 @@ const ContactsManager: React.FC = () => {
                     </div>
                     <div>
                       <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
-                        Type
+                        Industry
                       </label>
                       <input
                         id="industry"
@@ -776,13 +866,37 @@ const ContactsManager: React.FC = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       />
                     </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-2">
+                        Requirements
+                      </label>
+                      <textarea
+                        id="requirements"
+                        value={formData.requirements || ''}
+                        onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label htmlFor="remark" className="block text-sm font-medium text-gray-700 mb-2">
+                        Remark
+                      </label>
+                      <textarea
+                        id="remark"
+                        value={formData.remark || ''}
+                        onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        rows={4}
+                      />
+                    </div>
                   </>
                 )}
               </div>
             </div>
           )}
 
-          {sectionConfig[activeTab].showLocationDetails && (
+          {activeTab !== 'Broker' && sectionConfig[activeTab].showLocationDetails && (
             <div className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200">
               <h3 className="text-lg font-semibold text-purple-900 mb-4">Location Details</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

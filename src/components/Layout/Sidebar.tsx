@@ -50,15 +50,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = user?.role === 'admin' ? adminMenuItems : employeeMenuItems;
 
   return (
-    <div className="bg-gray-900 text-white w-64 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-700">
-        <div className="flex items-center space-x-3">
-          <div className="bg-blue-600 p-2 rounded-lg">
-            <Building className="h-6 w-6" />
+    <div className="bg-blue-50 text-gray-900 w-64 min-h-screen flex flex-col">
+      <div className="p-6 border-b border-blue-100">
+        <div className="flex flex-col items-center space-y-3">
+          <div className="p-4 rounded-lg">
+            <img 
+              src="https://greenearthspaces.com/wp-content/uploads/2021/07/Final-Logo.png" 
+              alt="ConstructCRM Logo" 
+              className="h-32 w-36"
+            />
           </div>
-          <div>
-            <h1 className="text-xl font-bold">ConstructCRM</h1>
-            <p className="text-sm text-gray-400">Project Management</p>
+          <div className="text-center">
+            <h1 className="text-xl font-bold">Green Earth Spaces</h1>
+            <p className="text-sm text-gray-500">Project Management</p>
           </div>
         </div>
       </div>
@@ -73,8 +77,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === item.id
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-blue-200 text-gray-900'
+                      : 'text-gray-700 hover:bg-blue-100 hover:text-gray-900'
                   }`}
                 >
                   <IconComponent className="h-5 w-5" />
@@ -86,19 +90,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-blue-100">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="bg-gray-600 p-2 rounded-full">
+          <div className="bg-blue-100 p-2 rounded-full">
             <Users className="h-4 w-4" />
           </div>
           <div>
             <p className="text-sm font-medium">{user?.name}</p>
-            <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+          className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-gray-900 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           <span>Logout</span>

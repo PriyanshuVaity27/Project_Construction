@@ -5,11 +5,13 @@ import Modal from '../Common/Modal';
 import { Lead, User } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { exportToCSV, downloadTemplate } from '../../utils/exportUtils';
+import { leadsService } from '../../services/leadsService';
 
 const LeadsManager: React.FC = () => {
   const { user } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -47,12 +49,16 @@ const LeadsManager: React.FC = () => {
     loadUsers();
   }, [user]);
 
-  const loadLeads = () => {
-    const storedLeads: Lead[] = JSON.parse(localStorage.getItem('leads') || '[]');
-    const filteredLeads = user?.role === 'admin'
-      ? storedLeads
-      : storedLeads.filter(lead => lead.leadManagedBy === user?.id);
-    setLeads(filteredLeads);
+  const loadLeads = async () => {
+    try {
+      setLoading(true);
+      const data = await leadsService.getLeads();
+      setLeads(data);
+    } catch (error) {
+      console.error('Failed to load leads:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadUsers = () => {
@@ -80,77 +86,94 @@ const LeadsManager: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const allLeads: Lead[] = JSON.parse(localStorage.getItem('leads') || '[]');
-    const assignedUser = users.find(u => u.id === formData.leadManagedBy);
-
-    const leadData = {
-      ...formData,
-      leadManagerName: assignedUser?.name || '',
-      budget: formData.budget ? parseFloat(formData.budget) : undefined
-    };
-
-    if (editingLead) {
-      const updatedLeads = allLeads.map(lead =>
-        lead.id === editingLead.id ? { ...lead, ...leadData } : lead
-      );
-      localStorage.setItem('leads', JSON.stringify(updatedLeads));
-      setLeads(updatedLeads);
-    } else {
-      const newLead: Lead = {
-        id: Date.now().toString(),
-        ...leadData,
-        inquiryNo: formData.inquiryNo || generateInquiryNo(),
-        createdAt: new Date().toISOString().split('T')[0]
+    try {
+      setLoading(true);
+      const leadData = {
+        inquiry_no: formData.inquiryNo || generateInquiryNo(),
+        inquiry_date: new Date(formData.inquiryDate).toISOString(),
+        client_company: formData.clientCompany,
+        contact_person: formData.contactPerson,
+        contact_no: formData.contactNo,
+        email: formData.email,
+        designation: formData.designation,
+        department: formData.department,
+        description: formData.description,
+        type_of_place: formData.typeOfPlace,
+        space_requirement: formData.spaceRequirement,
+        transaction_type: formData.transactionType,
+        budget: formData.budget ? parseInt(formData.budget) : null,
+        city: formData.city,
+        location_preference: formData.locationPreference,
+        first_contact_date: formData.firstContactDate ? new Date(formData.firstContactDate).toISOString() : null,
+        lead_managed_by: formData.leadManagedBy,
+        status: formData.status,
+        option_shared: formData.optionShared,
+        last_contact_date: formData.lastContactDate ? new Date(formData.lastContactDate).toISOString() : null,
+        next_action_plan: formData.nextActionPlan,
+        action_date: formData.actionDate ? new Date(formData.actionDate).toISOString() : null,
+        remark: formData.remark
       };
-      allLeads.push(newLead);
-      localStorage.setItem('leads', JSON.stringify(allLeads));
-      setLeads(allLeads);
-    }
 
-    resetForm();
-    setShowModal(false);
+      if (editingLead) {
+        await leadsService.updateLead(editingLead.id, leadData);
+      } else {
+        await leadsService.createLead(leadData);
+      }
+
+      await loadLeads();
+      resetForm();
+      setShowModal(false);
+    } catch (error) {
+      console.error('Failed to save lead:', error);
+      alert('Failed to save lead. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (lead: Lead) => {
     setEditingLead(lead);
     setFormData({
-      inquiryNo: lead.inquiryNo,
-      inquiryDate: lead.inquiryDate,
-      clientCompany: lead.clientCompany,
-      contactPerson: lead.contactPerson,
-      contactNo: lead.contactNo,
+      inquiryNo: lead.inquiry_no,
+      inquiryDate: lead.inquiry_date.split('T')[0],
+      clientCompany: lead.client_company,
+      contactPerson: lead.contact_person,
+      contactNo: lead.contact_no,
       email: lead.email,
       designation: lead.designation || '',
       department: lead.department || '',
       description: lead.description || '',
-      typeOfPlace: lead.typeOfPlace,
-      spaceRequirement: lead.spaceRequirement || '',
-      transactionType: lead.transactionType,
+      typeOfPlace: lead.type_of_place,
+      spaceRequirement: lead.space_requirement || '',
+      transactionType: lead.transaction_type,
       budget: lead.budget?.toString() || '',
       city: lead.city || '',
-      locationPreference: lead.locationPreference || '',
-      firstContactDate: lead.firstContactDate || '',
-      leadManagedBy: lead.leadManagedBy,
+      locationPreference: lead.location_preference || '',
+      firstContactDate: lead.first_contact_date?.split('T')[0] || '',
+      leadManagedBy: lead.lead_managed_by,
       status: lead.status,
-      optionShared: lead.optionShared,
-      lastContactDate: lead.lastContactDate || '',
-      nextActionPlan: lead.nextActionPlan || '',
-      actionDate: lead.actionDate || '',
+      optionShared: lead.option_shared,
+      lastContactDate: lead.last_contact_date?.split('T')[0] || '',
+      nextActionPlan: lead.next_action_plan || '',
+      actionDate: lead.action_date?.split('T')[0] || '',
       remark: lead.remark || ''
     });
     setShowModal(true);
   };
 
-  const handleDelete = (lead: Lead) => {
+  const handleDelete = async (lead: Lead) => {
     if (window.confirm('Are you sure you want to delete this lead?')) {
-      const allLeads: Lead[] = JSON.parse(localStorage.getItem('leads') || '[]');
-      const updatedLeads = allLeads.filter(l => l.id !== lead.id);
-      localStorage.setItem('leads', JSON.stringify(updatedLeads));
-      setLeads(updatedLeads);
+      try {
+        await leadsService.deleteLead(lead.id);
+        await loadLeads();
+      } catch (error) {
+        console.error('Failed to delete lead:', error);
+        alert('Failed to delete lead. Please try again.');
+      }
     }
   };
 
@@ -236,14 +259,19 @@ const LeadsManager: React.FC = () => {
   };
 
   const columns = [
-    { key: 'inquiryNo', label: 'Inquiry No.', sortable: true },
-    { key: 'inquiryDate', label: 'Inquiry Date', sortable: true },
-    { key: 'clientCompany', label: 'Client Company', sortable: true },
-    { key: 'contactPerson', label: 'Contact Person', sortable: true },
-    { key: 'contactNo', label: 'Contact No.', sortable: true },
+    { key: 'inquiry_no', label: 'Inquiry No.', sortable: true },
+    { 
+      key: 'inquiry_date', 
+      label: 'Inquiry Date', 
+      sortable: true,
+      render: (value: string) => new Date(value).toLocaleDateString()
+    },
+    { key: 'client_company', label: 'Client Company', sortable: true },
+    { key: 'contact_person', label: 'Contact Person', sortable: true },
+    { key: 'contact_no', label: 'Contact No.', sortable: true },
     { key: 'email', label: 'Email', sortable: true },
-    { key: 'typeOfPlace', label: 'Type of Place', sortable: true },
-    { key: 'spaceRequirement', label: 'Space Requirement', sortable: true },
+    { key: 'type_of_place', label: 'Type of Place', sortable: true },
+    { key: 'space_requirement', label: 'Space Requirement', sortable: true },
     { key: 'city', label: 'City', sortable: true },
     {
       key: 'status',

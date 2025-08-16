@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthContextType } from '../types';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -18,35 +19,55 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
+    const initAuth = async () => {
+      const token = localStorage.getItem('authToken');
+      const storedUser = localStorage.getItem('currentUser');
+      
+      if (token && storedUser) {
+        try {
+          // Verify token is still valid by fetching current user
+          const currentUser = await authService.getCurrentUser();
+          setUser(currentUser);
+          setIsAuthenticated(true);
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        } catch (error) {
+          // Token is invalid, clear storage
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('currentUser');
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      }
+      setLoading(false);
+    };
+
+    initAuth();
     }
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Mock authentication - in real app, this would call an API
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const foundUser = users.find((u: User) => u.email === email);
-    
-    if (foundUser && foundUser.status === 'active') {
-      // In a real app, you'd verify the password hash
-      setUser(foundUser);
+    try {
+      const response = await authService.login({ email, password });
+      
+      localStorage.setItem('authToken', response.access_token);
+      localStorage.setItem('currentUser', JSON.stringify(response.user));
+      
+      setUser(response.user);
       setIsAuthenticated(true);
-      localStorage.setItem('currentUser', JSON.stringify(foundUser));
       return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    
-    return false;
   };
 
   const logout = () => {
+    authService.logout();
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('currentUser');
   };
 
   const value: AuthContextType = {
@@ -54,7 +75,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     isAuthenticated,
+    loading,
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

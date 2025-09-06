@@ -28,9 +28,19 @@ const UsersManager: React.FC = () => {
     loadUsers();
   }, []);
 
-  const loadUsers = () => {
-    const storedUsers: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-    setUsers(storedUsers);
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await usersService.getUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error('Failed to load users:', error);
+      // Fallback to localStorage for development
+      const storedUsers: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+      setUsers(storedUsers);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {

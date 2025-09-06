@@ -135,17 +135,17 @@ const LoginForm: React.FC = () => {
             <div className="space-y-2">
               <button
                 type="button"
-                onClick={() => setDemoCredentials('admin')}
+                onClick={() => setFormData({ emailOrUsername: 'admin@greenearthspaces.com', password: 'admin123' })}
                 className="w-full text-left text-sm text-blue-600 hover:text-blue-800 transition-colors"
               >
-                👤 Admin: admin@construction.com
+                👤 Admin: admin@greenearthspaces.com
               </button>
               <button
                 type="button"
-                onClick={() => setDemoCredentials('employee')}
+                onClick={() => setFormData({ emailOrUsername: 'sarah@greenearthspaces.com', password: 'emp123' })}
                 className="w-full text-left text-sm text-blue-600 hover:text-blue-800 transition-colors"
               >
-                👤 Employee: sarah@construction.com
+                👤 Employee: sarah@greenearthspaces.com
               </button>
             </div>
           </div>

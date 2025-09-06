@@ -17,11 +17,33 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    const calculateStats = () => {
+    const calculateStats = async () => {
+      try {
+        // Try to load from API first
+        const leads = await leadsService.getLeads();
+        const developers = await developersService.getDevelopers();
+        const contacts = await contactsService.getContacts();
+        const land = await landService.getLandParcels();
+        
+        // Calculate stats with API data
+        calculateStatsFromData(leads, developers, contacts, land);
+      } catch (error) {
+        console.error('Failed to load data from API, using localStorage:', error);
+        // Fallback to localStorage
+        calculateStatsFromLocalStorage();
+      }
+    };
+    
+    const calculateStatsFromLocalStorage = () => {
       const leads: Lead[] = JSON.parse(localStorage.getItem('leads') || '[]');
       const developers: Developer[] = JSON.parse(localStorage.getItem('developers') || '[]');
       const contacts: Contact[] = JSON.parse(localStorage.getItem('contacts') || '[]');
       const land: Land[] = JSON.parse(localStorage.getItem('land') || '[]');
+      
+      calculateStatsFromData(leads, developers, contacts, land);
+    };
+    
+    const calculateStatsFromData = (leads: any[], developers: any[], contacts: any[], land: any[]) => {
 
       // Filter data based on user role
       const filteredLeads = user?.role === 'admin' 

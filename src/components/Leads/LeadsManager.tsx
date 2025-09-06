@@ -56,12 +56,16 @@ const LeadsManager: React.FC = () => {
       setLeads(data);
     } catch (error) {
       console.error('Failed to load leads:', error);
+      // Fallback to localStorage for development
+      const storedLeads = JSON.parse(localStorage.getItem('leads') || '[]');
+      setLeads(storedLeads);
     } finally {
       setLoading(false);
     }
   };
 
   const loadUsers = () => {
+    // For now, use localStorage users until users API is fully integrated
     const storedUsers: User[] = JSON.parse(localStorage.getItem('users') || '[]');
     setUsers(storedUsers.filter(u => u.status === 'active'));
   };

@@ -1,15 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import auth, leads, documents
+from fastapi.staticfiles import StaticFiles
+from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.database import engine
 from app.models import Base
+import os
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Construction CRM API",
+    title="Green Earth Spaces CRM API",
     description="A comprehensive CRM system for construction and real estate management",
     version="1.0.0",
     docs_url="/docs" if settings.debug else None,
@@ -26,15 +28,13 @@ app.add_middleware(
 )
 
 # Include API routes
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
-app.include_router(leads.router, prefix="/api/v1/leads", tags=["leads"])
-app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/")
 def read_root():
     return {
-        "message": "Construction CRM API",
+        "message": "Green Earth Spaces CRM API",
         "version": "1.0.0",
         "docs": "/docs" if settings.debug else "Documentation disabled in production"
     }
@@ -48,7 +48,7 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "main:app",
+        "app.main:app",
         host="0.0.0.0",
         port=8000,
         reload=settings.debug

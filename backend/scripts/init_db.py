@@ -11,6 +11,7 @@ from app.core.database import engine, SessionLocal
 from app.core.security import get_password_hash
 from app.models import Base, User
 from app.models.user import UserRole, UserStatus
+from app.core.config import settings
 import uuid
 
 
@@ -23,16 +24,16 @@ def init_db():
     
     try:
         # Check if admin user already exists
-        admin_user = db.query(User).filter(User.email == "admin@construction.com").first()
+        admin_user = db.query(User).filter(User.email == "admin@greenearthspaces.com").first()
         
         if not admin_user:
             # Create admin user
             admin_user = User(
                 id=str(uuid.uuid4()),
                 name="Admin User",
-                email="admin@construction.com",
+                email="admin@greenearthspaces.com",
                 username="admin",
-                password=get_password_hash("admin123"),
+                password=get_password_hash(settings.admin_password),
                 mobile_no="9876543210",
                 role=UserRole.ADMIN,
                 status=UserStatus.ACTIVE
@@ -43,7 +44,7 @@ def init_db():
             employee_user = User(
                 id=str(uuid.uuid4()),
                 name="John Manager",
-                email="john@construction.com",
+                email="john@greenearthspaces.com",
                 username="john",
                 password=get_password_hash("john123"),
                 mobile_no="9876543211",
@@ -56,9 +57,9 @@ def init_db():
             employee_user2 = User(
                 id=str(uuid.uuid4()),
                 name="Sarah Employee",
-                email="sarah@construction.com",
+                email="sarah@greenearthspaces.com",
                 username="sarah",
-                password=get_password_hash("sarah123"),
+                password=get_password_hash(settings.employee1_password),
                 mobile_no="9876543212",
                 role=UserRole.EMPLOYEE,
                 status=UserStatus.ACTIVE
@@ -67,9 +68,9 @@ def init_db():
             
             db.commit()
             print("✅ Database initialized with sample users:")
-            print("   Admin: admin@construction.com / admin123")
-            print("   Employee: john@construction.com / john123")
-            print("   Employee: sarah@construction.com / sarah123")
+            print("   Admin: admin@greenearthspaces.com / admin123")
+            print("   Employee: john@greenearthspaces.com / john123")
+            print("   Employee: sarah@greenearthspaces.com / emp123")
         else:
             print("✅ Database already initialized")
             

@@ -6,6 +6,7 @@ from .project import ProjectCreate, ProjectUpdate, ProjectResponse
 from .inventory import InventoryCreate, InventoryUpdate, InventoryResponse
 from .land import LandCreate, LandUpdate, LandResponse
 from .document import DocumentResponse, DocumentCreate
+from .pending_action import PendingActionResponse, PendingActionUpdate
 
 __all__ = [
     "UserCreate", "UserUpdate", "UserResponse", "UserLogin", "Token",
@@ -15,5 +16,6 @@ __all__ = [
     "ProjectCreate", "ProjectUpdate", "ProjectResponse",
     "InventoryCreate", "InventoryUpdate", "InventoryResponse",
     "LandCreate", "LandUpdate", "LandResponse",
-    "DocumentResponse", "DocumentCreate"
+    "DocumentResponse", "DocumentCreate",
+    "PendingActionResponse", "PendingActionUpdate"
 ]

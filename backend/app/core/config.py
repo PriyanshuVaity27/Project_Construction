@@ -7,20 +7,24 @@ class Settings(BaseSettings):
     database_url: str
     
     # JWT
-    jwt_secret: str
+    secret_key: str
+    algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     
-    # Cloudflare R2
-    r2_access_key: str
-    r2_secret_key: str
-    r2_endpoint: str
-    r2_bucket: str
-    r2_account_id: str
+    # Supabase Storage
+    supabase_url: str
+    supabase_anon_key: str
+    supabase_service_key: str
+    supabase_bucket: str = "greenearthspaces"
     
     # Environment
     environment: str = "development"
     debug: bool = True
     frontend_url: str = "http://localhost:5173"
+    
+    # Admin credentials
+    admin_password: str = "admin123"
+    employee1_password: str = "emp123"
     
     class Config:
         env_file = ".env"
